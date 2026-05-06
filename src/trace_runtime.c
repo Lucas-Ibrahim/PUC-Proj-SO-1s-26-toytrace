@@ -52,6 +52,8 @@ static pid_t launch_tracee(char *const argv[])
      *
      * Em erro, imprima uma mensagem com perror() e retorne -1.
      */
+
+    printf("RUNTIME: entrou no launch_tracee\n");
     fprintf(stderr, "erro: TODO Semana 2: implementar launch_tracee()\n");
     return -1;
 }
@@ -122,6 +124,7 @@ int trace_program(char *const argv[],
                   trace_observer_fn observer,
                   void *userdata)
 {
+    printf("RUNTIME: entrou no trace_program\n");
     pid_t child;
     int status = 0;
     int entering = 1;

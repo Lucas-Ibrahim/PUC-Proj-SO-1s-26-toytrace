@@ -37,6 +37,8 @@ int main(int argc, char **argv)
     struct trace_state state = {0};
     int rc;
 
+    printf("MAIN: antes do parse_args\n");
+
     rc = parse_args(argc, argv, &opts);
     if (rc > 0) {
         return 0;
@@ -44,6 +46,8 @@ int main(int argc, char **argv)
     if (rc < 0) {
         return 2;
     }
+
+    printf("MAIN: antes do trace_program\n");
 
     state.raw_events = opts.raw_events;
     rc = trace_program(opts.target_argv, trace_observer, &state);

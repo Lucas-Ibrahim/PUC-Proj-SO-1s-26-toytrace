@@ -64,5 +64,6 @@ int parse_args(int argc, char **argv, struct trace_options *opts)
     }
 
     opts->target_argv = &argv[sep + 1];
+    printf("CLI: argumentos parseados, target=%s\n", opts->target_argv[0]);
     return 0;
 }
