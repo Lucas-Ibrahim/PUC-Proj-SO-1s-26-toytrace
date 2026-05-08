@@ -36,44 +36,48 @@ static void fill_event_from_regs(pid_t pid,
 
 static pid_t launch_tracee(char *const argv[])
 {
-    /*
-     * TODO Semana 2:
-     *
-     * Crie o processo monitorado.
-     *
-     * Fluxo esperado:
-     * - fork()
-     * - no filho:
-     *   - ptrace(PTRACE_TRACEME, ...)
-     *   - raise(SIGSTOP)
-     *   - execvp(argv[0], argv)
-     * - no pai:
-     *   - retornar o pid do filho
-     *
-     * Em erro, imprima uma mensagem com perror() e retorne -1.
-     */
+    printf("RUNTIME: entrou no launch_tracee");
+   
+    pid_t filho = fork(); // pai cria o filho com fork
 
-    printf("RUNTIME: entrou no launch_tracee\n");
-    fprintf(stderr, "erro: TODO Semana 2: implementar launch_tracee()\n");
-    return -1;
+    if(filho > 0) // checa o pid para fazer somente o filho executar
+    {
+        printf("\nPai retornou o pid do filho");
+        return filho;
+    }
+    else if(filho < 0)
+    {
+        fprintf(stderr, "Pid do filho < 0\n");
+    }
+    else
+    {
+        ptrace(PTRACE_TRACEME, 0, NULL, NULL); // filho vai ser rastreado
+        raise(SIGSTOP);
+        fprintf(stderr,"\nFilho fez tudo que precisa em launch_tracee\n");
+        execvp(argv[0], argv); // filho vira outra coisa (nada após isso vai funcionar corretamente)
+    }
 }
 
 static int wait_for_initial_stop(pid_t child)
 {
-    /*
-     * TODO Semana 2:
-     *
-     * O filho chama raise(SIGSTOP) antes de executar o programa alvo.
-     * O pai precisa esperar essa parada inicial com waitpid().
-     *
-     * Retorne 0 se o filho parou como esperado, -1 em erro.
-     */
-    fprintf(stderr, "erro: TODO Semana 2: implementar wait_for_initial_stop()\n");
-    return -1;
+    int status; // cria variavel status
+
+    waitpid(child, &status, 0); // pai espera o filho
+    if(WIFSTOPPED(status)) // verifica se o filho realmente parou
+    {
+        printf("\nFilho realmente parou!");
+        return 0;
+    }
+    else
+    {
+        printf("\nFilho nao parou!");
+        return -1;
+    }
 }
 
 static int configure_trace_options(pid_t child)
 {
+    printf("\nEntrou em configure_trace_options\n");  
     /*
      * TODO Semana 3:
      *
